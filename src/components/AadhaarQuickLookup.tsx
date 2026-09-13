@@ -95,7 +95,15 @@ export const AadhaarQuickLookup: React.FC<AadhaarQuickLookupProps> = ({
                   setSearchAadhaar(e.target.value);
                   if (searched) setSearched(false);
                 }}
-                placeholder="12 अंकों का आधार नंबर दर्ज करें (उदा. 5834 9120 7412)"
+                placeholder={
+                  currentLang === 'en'
+                    ? 'Enter 12-digit Aadhaar number (e.g. 5834 9120 7412)'
+                    : currentLang === 'pa'
+                    ? '12 ਅੰਕਾਂ ਦਾ ਆਧਾਰ ਨੰਬਰ ਦਰਜ ਕਰੋ (ਜਿਵੇਂ 5834 9120 7412)'
+                    : currentLang === 'ne'
+                    ? '१२ अंकको आधार नम्बर हाल्नुहोस् (जस्तै ५८३४ ९१२० ७४१२)'
+                    : '12 अंकों का आधार नंबर दर्ज करें (उदा. 5834 9120 7412)'
+                }
                 className="w-full pl-4 pr-10 py-3.5 bg-slate-50 border-2 border-slate-200 focus:border-emerald-600 focus:bg-white rounded-xl text-base font-medium text-slate-900 placeholder:text-slate-400 outline-none transition-all"
               />
               <span className="absolute right-3.5 top-3.5 text-xs text-slate-400 font-mono">
@@ -154,7 +162,7 @@ export const AadhaarQuickLookup: React.FC<AadhaarQuickLookupProps> = ({
                       {matchedFarmer.name}
                     </h3>
                     <p className="text-emerald-200 text-sm mt-0.5">
-                      आधार संख्या: <span className="font-mono font-bold text-white tracking-wider">
+                      {currentLang === 'en' ? 'Aadhaar Number:' : currentLang === 'pa' ? 'ਆਧਾਰ ਨੰਬਰ:' : currentLang === 'ne' ? 'आधार नम्बर:' : 'आधार संख्या:'} <span className="font-mono font-bold text-white tracking-wider">
                         XXXX XXXX {matchedFarmer.aadhaarNumber.slice(-4)}
                       </span>
                     </p>

@@ -16,6 +16,12 @@ import {
   INITIAL_SMS_ALERTS 
 } from './data/mockData';
 import { TRANSLATIONS } from './i18n/translations';
+import { 
+  safeGetStorage, 
+  safeGetString, 
+  safeSetStorage, 
+  safeRemoveStorage 
+} from './utils/storage';
 
 // Components
 import { Navbar } from './components/Navbar';
@@ -30,46 +36,40 @@ import { TokenPassModal } from './components/TokenPassModal';
 export default function App() {
   // Localization & Mode State
   const [currentLang, setCurrentLang] = useState<Language>(() => {
-    return (localStorage.getItem('kisanq_lang') as Language) || 'hi';
+    return (safeGetString('kisanq_lang', 'hi') as Language);
   });
 
   const [activeRole, setActiveRole] = useState<UserRole>('farmer');
   const [activeTab, setActiveTab] = useState<string>('mandis');
   const [lowDataMode, setLowDataMode] = useState<boolean>(() => {
-    return localStorage.getItem('kisanq_low_data') === 'true';
+    return safeGetString('kisanq_low_data', 'false') === 'true';
   });
 
   // User Accounts State
   const [farmers, setFarmers] = useState<FarmerProfile[]>(() => {
-    const saved = localStorage.getItem('kisanq_farmers');
-    return saved ? JSON.parse(saved) : INITIAL_FARMERS;
+    return safeGetStorage('kisanq_farmers', INITIAL_FARMERS);
   });
 
   const [currentFarmer, setCurrentFarmer] = useState<FarmerProfile | null>(() => {
-    const saved = localStorage.getItem('kisanq_current_farmer');
-    return saved ? JSON.parse(saved) : INITIAL_FARMERS[0];
+    return safeGetStorage('kisanq_current_farmer', INITIAL_FARMERS[0]);
   });
 
   const [officers, setOfficers] = useState<OfficerProfile[]>(() => {
-    const saved = localStorage.getItem('kisanq_officers');
-    return saved ? JSON.parse(saved) : INITIAL_OFFICERS;
+    return safeGetStorage('kisanq_officers', INITIAL_OFFICERS);
   });
 
   const [currentOfficer, setCurrentOfficer] = useState<OfficerProfile | null>(() => {
-    const saved = localStorage.getItem('kisanq_current_officer');
-    return saved ? JSON.parse(saved) : null;
+    return safeGetStorage('kisanq_current_officer', null);
   });
 
   // Mandis & Bookings State
   const [mandis, setMandis] = useState(UTTARAKHAND_MANDIS);
   const [bookings, setBookings] = useState<SlotBooking[]>(() => {
-    const saved = localStorage.getItem('kisanq_bookings');
-    return saved ? JSON.parse(saved) : INITIAL_BOOKINGS;
+    return safeGetStorage('kisanq_bookings', INITIAL_BOOKINGS);
   });
 
   const [smsList, setSmsList] = useState<SMSAlert[]>(() => {
-    const saved = localStorage.getItem('kisanq_sms');
-    return saved ? JSON.parse(saved) : INITIAL_SMS_ALERTS;
+    return safeGetStorage('kisanq_sms', INITIAL_SMS_ALERTS);
   });
 
   // Modals & Navigation Helpers
@@ -80,11 +80,11 @@ export default function App() {
 
   // Persistence Effects
   useEffect(() => {
-    localStorage.setItem('kisanq_lang', currentLang);
+    safeSetStorage('kisanq_lang', currentLang);
   }, [currentLang]);
 
   useEffect(() => {
-    localStorage.setItem('kisanq_low_data', lowDataMode.toString());
+    safeSetStorage('kisanq_low_data', lowDataMode.toString());
     if (lowDataMode) {
       document.body.classList.add('low-data-mode');
     } else {
@@ -93,35 +93,35 @@ export default function App() {
   }, [lowDataMode]);
 
   useEffect(() => {
-    localStorage.setItem('kisanq_farmers', JSON.stringify(farmers));
+    safeSetStorage('kisanq_farmers', farmers);
   }, [farmers]);
 
   useEffect(() => {
     if (currentFarmer) {
-      localStorage.setItem('kisanq_current_farmer', JSON.stringify(currentFarmer));
+      safeSetStorage('kisanq_current_farmer', currentFarmer);
     } else {
-      localStorage.removeItem('kisanq_current_farmer');
+      safeRemoveStorage('kisanq_current_farmer');
     }
   }, [currentFarmer]);
 
   useEffect(() => {
-    localStorage.setItem('kisanq_officers', JSON.stringify(officers));
+    safeSetStorage('kisanq_officers', officers);
   }, [officers]);
 
   useEffect(() => {
     if (currentOfficer) {
-      localStorage.setItem('kisanq_current_officer', JSON.stringify(currentOfficer));
+      safeSetStorage('kisanq_current_officer', currentOfficer);
     } else {
-      localStorage.removeItem('kisanq_current_officer');
+      safeRemoveStorage('kisanq_current_officer');
     }
   }, [currentOfficer]);
 
   useEffect(() => {
-    localStorage.setItem('kisanq_bookings', JSON.stringify(bookings));
+    safeSetStorage('kisanq_bookings', bookings);
   }, [bookings]);
 
   useEffect(() => {
-    localStorage.setItem('kisanq_sms', JSON.stringify(smsList));
+    safeSetStorage('kisanq_sms', smsList);
   }, [smsList]);
 
   // Actions

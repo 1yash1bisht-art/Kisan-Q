@@ -83,35 +83,21 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             {/* Language Selector */}
-            <div className="flex items-center bg-emerald-950/60 rounded p-0.5 text-xs">
-              <button
-                id="lang-btn-hi"
-                onClick={() => onLanguageChange('hi')}
-                className={`px-2 py-0.5 rounded transition-all font-medium ${
-                  currentLang === 'hi' ? 'bg-white text-emerald-900 shadow-xs font-bold' : 'text-emerald-200 hover:text-white'
-                }`}
+            <div className="flex items-center bg-emerald-950/70 rounded-lg p-0.5 text-xs">
+              <select
+                id="language-select-dropdown"
+                value={currentLang}
+                onChange={(e) => onLanguageChange(e.target.value as Language)}
+                aria-label="Select Language"
+                className="bg-transparent text-white text-xs font-bold py-1 px-2.5 rounded outline-none cursor-pointer border border-emerald-700/50 hover:border-emerald-500"
               >
-                हिन्दी
-              </button>
-              <button
-                id="lang-btn-en"
-                onClick={() => onLanguageChange('en')}
-                className={`px-2 py-0.5 rounded transition-all font-medium ${
-                  currentLang === 'en' ? 'bg-white text-emerald-900 shadow-xs font-bold' : 'text-emerald-200 hover:text-white'
-                }`}
-              >
-                English
-              </button>
-              <button
-                id="lang-btn-gar"
-                onClick={() => onLanguageChange('gar')}
-                className={`px-2 py-0.5 rounded transition-all font-medium ${
-                  currentLang === 'gar' ? 'bg-white text-emerald-900 shadow-xs font-bold' : 'text-emerald-200 hover:text-white'
-                }`}
-                title="उत्तराखंड आंचलिक भाषा"
-              >
-                गढ़वाली
-              </button>
+                <option value="hi" className="text-slate-900 font-medium">🇮🇳 हिन्दी (Hindi)</option>
+                <option value="en" className="text-slate-900 font-medium">🇬🇧 English</option>
+                <option value="gar" className="text-slate-900 font-medium">⛰️ गढ़वाली (Garhwali)</option>
+                <option value="kum" className="text-slate-900 font-medium">🏔️ कुमाऊँनी (Kumaoni)</option>
+                <option value="pa" className="text-slate-900 font-medium">🌾 ਪੰਜਾਬੀ (Punjabi)</option>
+                <option value="ne" className="text-slate-900 font-medium">🏔️ नेपाली (Nepali)</option>
+              </select>
             </div>
           </div>
         </div>

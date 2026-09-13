@@ -38,16 +38,37 @@ npm run dev
 ```
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-### 3. Build for Production / GitHub Pages
+### 3. Build for Production
 ```bash
 npm run build
 ```
 The compiled output will be generated in `dist/`.
 
-To test the production build locally:
+---
+
+## 🚀 How to Fix "Blank White Page" on GitHub Pages
+
+A blank white page occurs when GitHub Pages attempts to serve the root repository folder instead of the compiled `dist/` directory (where raw TypeScript `/src/main.tsx` cannot be executed by the browser).
+
+We have configured two foolproof deployment options:
+
+### Option 1: Automated GitHub Actions Deployment (Recommended)
+This repository includes an automated workflow in `.github/workflows/deploy.yml`.
+1. Push this repository to your GitHub account.
+2. In your GitHub repository, go to **Settings** > **Pages**.
+3. Under **Build and deployment** > **Source**, select **GitHub Actions** (instead of "Deploy from a branch").
+4. Go to the **Actions** tab on your repository; you will see the `Deploy KisanQ to GitHub Pages` workflow running.
+5. Once green, click the generated URL. The app will load with all assets resolved.
+
+### Option 2: Deploy via `gh-pages` (1-Command CLI)
+If you prefer deploying directly from your local terminal:
+1. In `package.json`, the `gh-pages` deploy script is already pre-configured.
+2. Run:
 ```bash
-npm run preview
+npm run deploy
 ```
+3. This command will build the project (`npm run build`) and push the `dist/` folder directly to a `gh-pages` branch on your GitHub repository.
+4. Go to **Settings** > **Pages**, set **Source** to **Deploy from a branch**, choose branch **`gh-pages`** and folder **`/ (root)`**, then click **Save**.
 
 ---
 

@@ -12,9 +12,35 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Rozha+One&family=Tiro+Devanagari+Hindi:ital@0;1&family=Mukta:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+      // Ensure trailing slash on GitHub Pages directory URLs so relative assets resolve reliably
+      (function() {
+        var path = window.location.pathname;
+        if (path.length > 1 && !path.endsWith('/') && !path.split('/').pop().includes('.')) {
+          window.location.replace(path + '/' + window.location.search + window.location.hash);
+        }
+      })();
+    </script>
   </head>
   <body class="bg-slate-50 text-slate-900 font-sans antialiased">
-    <div id="root"></div>
+    <div id="root">
+      <!-- Pre-mount loading state (automatically replaced once React mounts) -->
+      <div style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: system-ui, -apple-system, sans-serif; background-color: #f8fafc; color: #0f172a; padding: 20px; text-align: center;">
+        <div style="width: 48px; height: 48px; border: 4px solid #e2e8f0; border-top-color: #059669; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 16px;"></div>
+        <h1 style="font-size: 20px; font-weight: 700; margin: 0 0 8px; color: #064e3b;">किसान क्यू (KisanQ)</h1>
+        <p style="font-size: 14px; color: #64748b; margin: 0; max-width: 400px;">
+          स्मार्ट मंडी पोर्टल लोड हो रहा है... कृपया प्रतीक्षा करें।
+        </p>
+        <noscript>
+          <div style="margin-top: 20px; padding: 12px 16px; background: #fee2e2; border: 1px solid #f87171; border-radius: 8px; color: #991b1b; font-size: 13px;">
+            ⚠️ इस पोर्टल का उपयोग करने के लिए ब्राउज़र में जावास्क्रिप्ट सक्षम करें। (Please enable JavaScript to run this app).
+          </div>
+        </noscript>
+      </div>
+      <style>
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+      </style>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

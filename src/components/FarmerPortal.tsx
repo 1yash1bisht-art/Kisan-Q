@@ -61,6 +61,8 @@ export const FarmerPortal: React.FC<FarmerPortalProps> = ({
   const [otpInput, setOtpInput] = useState('');
   const [otpSent, setOtpSent] = useState(false);
   const [otpCountdown, setOtpCountdown] = useState(30);
+  const [authError, setAuthError] = useState<string | null>(null);
+  const [isVerifyingAadhaar, setIsVerifyingAadhaar] = useState(false);
 
   // Registration specifics
   const [regName, setRegName] = useState('');
@@ -82,19 +84,49 @@ export const FarmerPortal: React.FC<FarmerPortalProps> = ({
   const [selectedTimeSlot, setSelectedTimeSlot] = useState('09:00 AM - 11:00 AM');
   const [showBookingModal, setShowBookingModal] = useState(false);
 
-  // Trigger demo OTP
+  // Format Aadhaar with spaces (4 4 4)
+  const handleAadhaarChange = (val: string) => {
+    setAuthError(null);
+    const raw = val.replace(/\D/g, '').slice(0, 12);
+    setAadhaarInput(raw);
+  };
+
+  // Trigger demo OTP & Aadhaar check
   const handleSendOtp = () => {
-    if (aadhaarInput.replace(/\D/g, '').length < 12) {
-      alert('कृपया 12 अंकों का वैध आधार नंबर दर्ज करें। (Please enter a valid 12-digit Aadhaar number)');
+    setAuthError(null);
+    const clean = aadhaarInput.replace(/\D/g, '');
+    if (clean.length < 12) {
+      setAuthError(
+        currentLang === 'en'
+          ? 'Please enter a valid 12-digit Aadhaar number.'
+          : currentLang === 'pa'
+          ? 'ਕਿਰਪਾ ਕਰਕੇ 12 ਅੰਕਾਂ ਦਾ ਆਧਾਰ ਨੰਬਰ ਦਰਜ ਕਰੋ।'
+          : currentLang === 'ne'
+          ? 'कृपया १२ अंकको मान्य आधार नम्बर प्रविष्ट गर्नुहोस्।'
+          : 'कृपया 12 अंकों का वैध आधार नंबर दर्ज करें।'
+      );
       return;
     }
-    setOtpSent(true);
-    setOtpInput('849201'); // Pre-fill mock OTP for zero friction
+    setIsVerifyingAadhaar(true);
+    setTimeout(() => {
+      setIsVerifyingAadhaar(false);
+      setOtpSent(true);
+      setOtpInput('849201'); // Pre-fill mock OTP for zero friction
+    }, 600);
   };
 
   const handleSignIn = (e: React.FormEvent) => {
     e.preventDefault();
+    setAuthError(null);
     const cleanAadhaar = aadhaarInput.replace(/\D/g, '');
+    if (cleanAadhaar.length < 12) {
+      setAuthError(
+        currentLang === 'en'
+          ? 'Please enter a complete 12-digit Aadhaar number.'
+          : 'कृपया पूरा 12 अंकों का आधार नंबर दर्ज करें।'
+      );
+      return;
+    }
     
     // Check if farmer matches an existing sample or create session
     const existingFarmer: FarmerProfile = {
@@ -116,9 +148,14 @@ export const FarmerPortal: React.FC<FarmerPortalProps> = ({
 
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
+    setAuthError(null);
     const cleanAadhaar = aadhaarInput.replace(/\D/g, '');
     if (cleanAadhaar.length < 12) {
-      alert('कृपया 12 अंकों का आधार नंबर दर्ज करें (Please enter 12-digit Aadhaar)');
+      setAuthError(
+        currentLang === 'en'
+          ? 'Please enter a 12-digit Aadhaar number for registration.'
+          : 'पंजीकरण हेतु 12 अंकों का आधार नंबर आवश्यक है।'
+      );
       return;
     }
 
@@ -248,22 +285,36 @@ export const FarmerPortal: React.FC<FarmerPortalProps> = ({
             </button>
           </div>
 
+          {/* Error Banner */}
+          {authError && (
+            <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-medium flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 shrink-0 text-red-500" />
+              <span>{authError}</span>
+            </div>
+          )}
+
           {/* Sign In Form */}
           {authMode === 'signin' ? (
             <form onSubmit={handleSignIn} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  {t.aadhaarLabel}
-                </label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-bold text-slate-700">
+                    {t.aadhaarLabel}
+                  </label>
+                  <span className="text-[10px] text-emerald-700 font-bold flex items-center gap-1">
+                    <ShieldCheck className="w-3 h-3" />
+                    UIDAI e-KYC
+                  </span>
+                </div>
                 <input
                   id="farmer-aadhaar-input"
                   type="text"
                   maxLength={12}
                   required
                   value={aadhaarInput}
-                  onChange={(e) => setAadhaarInput(e.target.value)}
+                  onChange={(e) => handleAadhaarChange(e.target.value)}
                   placeholder={t.aadhaarPlaceholder}
-                  className="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-base font-mono focus:border-emerald-600 focus:bg-white outline-none"
+                  className="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-base font-mono focus:border-emerald-600 focus:bg-white outline-none tracking-wider"
                 />
               </div>
 
@@ -277,25 +328,40 @@ export const FarmerPortal: React.FC<FarmerPortalProps> = ({
                     type="tel"
                     maxLength={10}
                     value={mobileInput}
-                    onChange={(e) => setMobileInput(e.target.value)}
+                    onChange={(e) => {
+                      setAuthError(null);
+                      setMobileInput(e.target.value);
+                    }}
                     placeholder={t.mobilePlaceholder}
-                    className="flex-1 px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:border-emerald-600 outline-none"
+                    className="flex-1 px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:border-emerald-600 outline-none font-mono"
                   />
                   <button
                     type="button"
                     onClick={handleSendOtp}
-                    className="px-4 py-3 bg-emerald-100 text-emerald-800 hover:bg-emerald-200 font-bold text-xs rounded-xl whitespace-nowrap"
+                    disabled={isVerifyingAadhaar}
+                    className="px-4 py-3 bg-emerald-100 text-emerald-800 hover:bg-emerald-200 font-bold text-xs rounded-xl whitespace-nowrap transition-colors flex items-center gap-1.5"
                   >
-                    {otpSent ? 'OTP भेजा गया ✓' : t.sendOtp}
+                    {isVerifyingAadhaar ? (
+                      <span>सत्यापन...</span>
+                    ) : otpSent ? (
+                      <span>OTP भेजा गया ✓</span>
+                    ) : (
+                      <span>{t.sendOtp}</span>
+                    )}
                   </button>
                 </div>
               </div>
 
               {otpSent && (
-                <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200 animate-fadeIn">
-                  <label className="block text-xs font-bold text-emerald-900 mb-1">
-                    {t.otpLabel}
-                  </label>
+                <div className="p-3.5 bg-emerald-50/80 rounded-xl border border-emerald-200 animate-fadeIn space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className="block text-xs font-bold text-emerald-900">
+                      {t.otpLabel}
+                    </label>
+                    <span className="text-[10px] text-emerald-700 font-medium bg-emerald-100/70 px-2 py-0.5 rounded-full">
+                      सत्यापन कोड भेजा गया
+                    </span>
+                  </div>
                   <input
                     id="farmer-otp-input"
                     type="text"
@@ -303,11 +369,12 @@ export const FarmerPortal: React.FC<FarmerPortalProps> = ({
                     value={otpInput}
                     onChange={(e) => setOtpInput(e.target.value)}
                     placeholder="849201"
-                    className="w-full px-4 py-2 bg-white border border-emerald-300 rounded-lg text-lg font-mono text-center tracking-widest font-bold"
+                    className="w-full px-4 py-2.5 bg-white border border-emerald-300 rounded-lg text-lg font-mono text-center tracking-widest font-bold text-emerald-950 focus:outline-emerald-600"
                   />
-                  <span className="text-[10px] text-emerald-700 mt-1 block">
-                    ✓ डेमो सत्यापन: स्वतः भरा गया (Auto-filled mock OTP for testing)
-                  </span>
+                  <div className="flex items-center justify-between text-[10px] text-emerald-800 font-medium pt-1 border-t border-emerald-200/60">
+                    <span>✓ UIDAI आधार e-KYC सिम्युलेशन</span>
+                    <span className="text-slate-500">OTP: 849201</span>
+                  </div>
                 </div>
               )}
 

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="hi">
+  <head>
+    <meta charset="utf-8">
+    <title>KisanQ - Redirecting...</title>
+    <script>
+      // Single Page App redirect for GitHub Pages
+      // If a subpath or direct route is accessed, preserve query and hash and route to root
+      var path = window.location.pathname;
+      var segments = path.split('/').filter(Boolean);
+      // If deployed at username.github.io/reponame/
+      var base = segments.length > 0 ? '/' + segments[0] + '/' : '/';
+      window.location.replace(base);
+    </script>
+  </head>
+  <body style="font-family: sans-serif; text-align: center; padding-top: 50px; background: #0f172a; color: #f8fafc;">
+    <h2>किसान क्यू (KisanQ)</h2>
+    <p>रीडायरेक्ट किया जा रहा है... (Redirecting to app home...)</p>
+  </body>
+</html>

@@ -94,17 +94,23 @@ export const IVRModal: React.FC<IVRModalProps> = ({
       const utterance = new SpeechSynthesisUtterance(text);
       
       // Determine language and best voice
-      const targetLang = currentLang === 'en' ? 'en' : 'hi';
-      utterance.lang = targetLang === 'en' ? 'en-IN' : 'hi-IN';
+      let targetLangTag = 'hi-IN';
+      if (currentLang === 'en') targetLangTag = 'en-IN';
+      else if (currentLang === 'pa') targetLangTag = 'pa-IN';
+      else if (currentLang === 'ne') targetLangTag = 'ne-NP';
+      else targetLangTag = 'hi-IN';
+
+      utterance.lang = targetLangTag;
       utterance.rate = 0.95;
       utterance.pitch = 1.0;
 
       // Try finding a matching voice
-      const matchingVoice = voices.find(v => 
-        targetLang === 'hi' 
-          ? (v.lang.includes('hi') || v.name.toLowerCase().includes('hindi') || v.name.toLowerCase().includes('india'))
-          : (v.lang.includes('en-IN') || v.lang.includes('en'))
-      );
+      const matchingVoice = voices.find(v => {
+        if (currentLang === 'en') return v.lang.includes('en-IN') || v.lang.includes('en');
+        if (currentLang === 'pa') return v.lang.includes('pa') || v.name.toLowerCase().includes('punjabi');
+        if (currentLang === 'ne') return v.lang.includes('ne') || v.name.toLowerCase().includes('nepali');
+        return v.lang.includes('hi') || v.name.toLowerCase().includes('hindi') || v.name.toLowerCase().includes('india');
+      });
 
       if (matchingVoice) {
         utterance.voice = matchingVoice;
@@ -130,6 +136,24 @@ export const IVRModal: React.FC<IVRModalProps> = ({
     }
   };
 
+  const getWelcomePrompt = (lang: Language) => {
+    switch (lang) {
+      case 'en':
+        return 'Welcome to KisanQ Mandi Toll-Free Helpline 1800-180-1551. Press 1 to check your Token and Queue status. Press 2 for quick Potato slot booking. Press 3 for Uttarakhand Mandi live wait times and best Potato prices. Press 4 to connect with a Mandi Officer.';
+      case 'gar':
+        return 'किसानक्यू टोल-फ्री फोन 1800-180-1551 मा स्वागत छ। टोकन और कतार देखण खातिर 1 दबावा। आलू स्लॉट बुकिंग खातिर 2 दबावा। मंडी भाव और टाइम खातिर 3 दबावा। अधिकारी जी से बात करण खातिर 4 दबावा।';
+      case 'kum':
+        return 'किसानक्यू टोल-फ्री फोन 1800-180-1551 में तुमरो स्वागत छ। टोकन व कतार देखण खातिर 1 दबावा। नया आलू स्लॉट बुकिंग खातिर 2 दबावा। उत्तराखंडक मंडियुक भाव खातिर 3 दबावा। मंडी अधिकारी ले बात करण खातिर 4 दबावा।';
+      case 'pa':
+        return 'ਕਿਸਾਨ ਕਿਊ ਟੋਲ-ਫ੍ਰੀ ਹੈਲਪਲਾਈਨ 1800-180-1551 ਤੇ ਤੁਹਾਡਾ ਸਵਾਗਤ ਹੈ। ਆਪਣੇ ਟੋਕਨ ਤੇ ਕਤਾਰ ਦੀ ਸਥਿਤੀ ਲਈ 1 ਦਬਾਓ। ਆਲੂ ਸਲਾਟ ਬੁਕਿੰਗ ਲਈ 2 ਦਬਾਓ। ਮੰਡੀਆਂ ਦਾ ਸਮਾਂ ਅਤੇ ਰੇਟ ਜਾਣਨ ਲਈ 3 ਦਬਾਓ। ਮੰਡੀ ਅਧਿਕਾਰੀ ਨਾਲ ਗੱਲ ਕਰਨ ਲਈ 4 ਦਬਾਓ।';
+      case 'ne':
+        return 'किसानक्यु टोल-फ्री हेल्पलाइन 1800-180-1551 मा स्वागत छ। टोकन र लामको अवस्था बुझ्न 1 थिच्नुहोस्। नयाँ स्लट बुकिङका लागि 2 थिच्नुहोस्। मण्डी भाउ र समयका लागि 3 थिच्नुहोस्। मण्डी अधिकारीसँग कुरा गर्न 4 थिच्नुहोस्।';
+      case 'hi':
+      default:
+        return 'किसानक्यू स्मार्ट मंडी टोल-फ्री हेल्पलाइन 1800-180-1551 में आपका स्वागत है। अपने टोकन और कतार की स्थिति जानने के लिए 1 दबाएं। आलू स्लॉट त्वरित बुकिंग के लिए 2 दबाएं। उत्तराखंड की मंडियों में प्रतीक्षा समय और ताजा आलू भाव जानने के लिए 3 दबाएं। मंडी अधिकारी से बात करने के लिए 4 दबाएं।';
+    }
+  };
+
   const startCall = () => {
     setIsCalling(true);
     setCurrentStep('welcome');
@@ -137,9 +161,7 @@ export const IVRModal: React.FC<IVRModalProps> = ({
     // Play telephonic ringing first
     playPhoneRing(0.8);
 
-    const welcomeMsg = currentLang === 'en'
-      ? 'Welcome to KisanQ Mandi Toll-Free Helpline 1800-180-1551. Press 1 to check your Token and Queue status. Press 2 for quick Potato slot booking. Press 3 for Uttarakhand Mandi live wait times and best Potato prices. Press 4 to connect with a Mandi Officer.'
-      : 'किसानक्यू स्मार्ट मंडी टोल-फ्री हेल्पलाइन 1800-180-1551 में आपका स्वागत है। अपने टोकन और कतार की स्थिति जानने के लिए 1 दबाएं। आलू स्लॉट त्वरित बुकिंग के लिए 2 दबाएं। उत्तराखंड की मंडियों में प्रतीक्षा समय और ताजा आलू भाव जानने के लिए 3 दबाएं। मंडी अधिकारी से बात करने के लिए 4 दबाएं।';
+    const welcomeMsg = getWelcomePrompt(currentLang);
     
     setTimeout(() => {
       speakText(welcomeMsg);

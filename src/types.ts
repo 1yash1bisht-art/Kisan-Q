@@ -1,4 +1,4 @@
-export type Language = 'hi' | 'en' | 'gar';
+export type Language = 'hi' | 'en' | 'gar' | 'kum' | 'pa' | 'ne';
 
 export type UserRole = 'farmer' | 'officer';
 
@@ -24,10 +24,15 @@ export interface UttarakhandMandi {
     hi: string;
     en: string;
     gar: string;
+    kum?: string;
+    pa?: string;
+    ne?: string;
+    [key: string]: string | undefined;
   };
   district: {
     hi: string;
     en: string;
+    [key: string]: string | undefined;
   };
   locationAddress: string;
   approxDistanceKm: number;
@@ -42,6 +47,10 @@ export interface UttarakhandMandi {
     hi: string;
     en: string;
     gar: string;
+    kum?: string;
+    pa?: string;
+    ne?: string;
+    [key: string]: string | undefined;
   };
   contactHelpline: string;
   officerInCharge: string;
@@ -113,6 +122,10 @@ export interface SMSAlert {
     hi: string;
     en: string;
     gar: string;
+    kum?: string;
+    pa?: string;
+    ne?: string;
+    [key: string]: string | undefined;
   };
   timestamp: string;
   status: 'delivered' | 'sent';
