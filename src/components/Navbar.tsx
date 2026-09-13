@@ -92,10 +92,17 @@ export const Navbar: React.FC<NavbarProps> = ({
                 className="bg-transparent text-white text-xs font-bold py-1 px-2.5 rounded outline-none cursor-pointer border border-emerald-700/50 hover:border-emerald-500"
               >
                 <option value="hi" className="text-slate-900 font-medium">🇮🇳 हिन्दी (Hindi)</option>
-                <option value="en" className="text-slate-900 font-medium">🇬🇧 English</option>
+                <option value="en" className="text-slate-900 font-medium">🌐 English</option>
+                <option value="pa" className="text-slate-900 font-medium">🌾 ਪੰਜਾਬੀ (Punjabi)</option>
+                <option value="gu" className="text-slate-900 font-medium">🦁 ગુજરાતી (Gujarati)</option>
+                <option value="mr" className="text-slate-900 font-medium">🚩 मराठी (Marathi)</option>
+                <option value="bn" className="text-slate-900 font-medium">🌿 বাংলা (Bengali)</option>
+                <option value="te" className="text-slate-900 font-medium">🌾 తెలుగు (Telugu)</option>
+                <option value="ta" className="text-slate-900 font-medium">🏛️ தமிழ் (Tamil)</option>
+                <option value="kn" className="text-slate-900 font-medium">🐘 ಕನ್ನಡ (Kannada)</option>
+                <option value="or" className="text-slate-900 font-medium">🌊 ଓଡ଼ିଆ (Odia)</option>
                 <option value="gar" className="text-slate-900 font-medium">⛰️ गढ़वाली (Garhwali)</option>
                 <option value="kum" className="text-slate-900 font-medium">🏔️ कुमाऊँनी (Kumaoni)</option>
-                <option value="pa" className="text-slate-900 font-medium">🌾 ਪੰਜਾਬੀ (Punjabi)</option>
                 <option value="ne" className="text-slate-900 font-medium">🏔️ नेपाली (Nepali)</option>
               </select>
             </div>

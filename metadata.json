@@ -1,6 +1,6 @@
 {
   "name": "KisanQ - किसान क्यू",
-  "description": "Smart Mandi Slot Booking & Queue Management Platform for Farmers with IVR Helpline, Aadhaar verification, SMS alerts, and real-time Uttarakhand mandi queue tracking.",
+  "description": "All-India Smart Mandi Slot Booking & Queue Management Platform for Farmers with IVR Helpline, Aadhaar verification, SMS alerts, multi-lingual support, and real-time mandi queue tracking across all states.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

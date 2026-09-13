@@ -1,4 +1,17 @@
-export type Language = 'hi' | 'en' | 'gar' | 'kum' | 'pa' | 'ne';
+export type Language = 
+  | 'hi'   // हिन्दी (Hindi - National)
+  | 'en'   // English
+  | 'pa'   // ਪੰਜਾਬੀ (Punjabi)
+  | 'gu'   // ગુજરાતી (Gujarati)
+  | 'mr'   // मराठी (Marathi)
+  | 'bn'   // বাংলা (Bengali)
+  | 'te'   // తెలుగు (Telugu)
+  | 'ta'   // தமிழ் (Tamil)
+  | 'kn'   // ಕನ್ನಡ (Kannada)
+  | 'or'   // ଓଡ଼ିଆ (Odia)
+  | 'gar'  // गढ़वाली (Garhwali)
+  | 'kum'  // कुमाऊँनी (Kumaoni)
+  | 'ne';  // नेपाली (Nepali)
 
 export type UserRole = 'farmer' | 'officer';
 
@@ -7,9 +20,11 @@ export type CropType =
   | 'wheat' 
   | 'paddy' 
   | 'tomato' 
+  | 'onion'
   | 'mustard' 
   | 'apple' 
-  | 'pulses';
+  | 'pulses'
+  | 'spices';
 
 export type QueueStage = 
   | 'slot_booked'
@@ -18,14 +33,27 @@ export type QueueStage =
   | 'procurement_approved'
   | 'payment_settled';
 
-export interface UttarakhandMandi {
+export interface MandiInfo {
   id: string;
+  state: {
+    hi: string;
+    en: string;
+    code: string;
+    [key: string]: string | undefined;
+  };
   name: {
     hi: string;
     en: string;
-    gar: string;
+    gar?: string;
     kum?: string;
     pa?: string;
+    gu?: string;
+    mr?: string;
+    bn?: string;
+    te?: string;
+    ta?: string;
+    kn?: string;
+    or?: string;
     ne?: string;
     [key: string]: string | undefined;
   };
@@ -42,19 +70,20 @@ export interface UttarakhandMandi {
   bookedQuintals: number;
   activeGates: number;
   potatoProcurementPricePerQtl: number;
+  cropPrices?: Partial<Record<CropType, number>>;
+  specialtyCrops?: CropType[];
   isBestRecommended?: boolean;
   recommendationReason?: {
     hi: string;
     en: string;
-    gar: string;
-    kum?: string;
-    pa?: string;
-    ne?: string;
     [key: string]: string | undefined;
   };
   contactHelpline: string;
   officerInCharge: string;
 }
+
+// Backward compatibility alias
+export type UttarakhandMandi = MandiInfo;
 
 export interface FarmerProfile {
   id: string;

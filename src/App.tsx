@@ -6,9 +6,10 @@ import {
   OfficerProfile, 
   SlotBooking, 
   SMSAlert, 
-  QueueStage 
+  QueueStage,
+  MandiInfo
 } from './types';
-import { UTTARAKHAND_MANDIS } from './data/uttarakhandMandis';
+import { ALL_INDIA_MANDIS } from './data/allIndiaMandis';
 import { 
   INITIAL_FARMERS, 
   INITIAL_OFFICERS, 
@@ -63,7 +64,7 @@ export default function App() {
   });
 
   // Mandis & Bookings State
-  const [mandis, setMandis] = useState(UTTARAKHAND_MANDIS);
+  const [mandis, setMandis] = useState<MandiInfo[]>(ALL_INDIA_MANDIS);
   const [bookings, setBookings] = useState<SlotBooking[]>(() => {
     return safeGetStorage('kisanq_bookings', INITIAL_BOOKINGS);
   });
@@ -446,6 +447,7 @@ export default function App() {
         isOpen={isIVROpen}
         onClose={() => setIsIVROpen(false)}
         currentLang={currentLang}
+        onLanguageChange={setCurrentLang}
         activeBooking={activeFarmerBooking}
         mandis={mandis}
       />
